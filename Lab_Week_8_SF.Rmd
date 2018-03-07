@@ -1,0 +1,43 @@
+---
+title: "Lab Week 8"
+author: "Sean Fitzgerald"
+date: "March 7, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r packages_data}
+
+library(tidyverse)
+library(sf)
+library(tmap)
+library(leaflet)
+library(spatstat)
+library(maptools)
+library(corrplot)
+
+oil_spills <- read_csv("oil_spills.csv")
+
+states <- st_read(dsn = ".", layer = "states")
+
+```
+
+```{r part_4}
+
+df <- oil_spills %>% 
+  filter(`Accident State` == "TX" & `Accident Year` < 2017) %>% 
+  group_by(`Accident Year`) %>% 
+  summarise(Loss = sum(`Net Loss (Barrels)`))
+
+colnames(df) <- c("Year","Loss")
+
+ggplot(df, aes(x = Year, y = Loss)) +
+  geom_col() +
+  xlab("Year") +
+  ylab("Texas Oil Spill Losses (Barrels)") 
+
+```
+
